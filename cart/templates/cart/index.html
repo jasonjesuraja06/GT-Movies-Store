@@ -4,12 +4,20 @@
 {% load cart_filters %}
 <div class="p-3">
   <div class="container">
+
     <div class="row mt-3">
       <div class="col mx-auto mb-3">
-        <h2>Shopping Cart</h2>
+        <h2>Shopping Cart {{ template_data.cart_id }}</h2>
         <hr />
+        <!-- Cart picker -->
+        <div class="btn-group mb-2" role="group" aria-label="Pick cart">
+          <a href="{% url 'cart.index_id' 1 %}" class="btn btn-outline-dark {% if template_data.cart_id == 1 %}active{% endif %}">Cart 1</a>
+          <a href="{% url 'cart.index_id' 2 %}" class="btn btn-outline-dark {% if template_data.cart_id == 2 %}active{% endif %}">Cart 2</a>
+          <a href="{% url 'cart.index_id' 3 %}" class="btn btn-outline-dark {% if template_data.cart_id == 3 %}active{% endif %}">Cart 3</a>
+        </div>
       </div>
     </div>
+
     <div class="row m-1">
       <table class="table table-bordered table-striped text-center">
         <thead>
@@ -26,27 +34,27 @@
             <td>{{ movie.id }}</td>
             <td>{{ movie.name }}</td>
             <td>${{ movie.price }}</td>
-            <td>{{ request.session.cart|get_quantity:movie.id }}</td>
+
+            {# use the selected cart bucket passed by the view #}
+            <td>{{ template_data.cart|get_quantity:movie.id }}</td>
           </tr>
           {% endfor %}
         </tbody>
       </table>
     </div>
+
     <div class="row">
       <div class="text-end">
         <a class="btn btn-outline-secondary mb-2"><b>Total to pay:</b> ${{ template_data.cart_total }}</a>
         {% if template_data.movies_in_cart|length > 0 %}
-        <a href="{% url 'cart.purchase' %}"
-          class="btn bg-dark text-white mb-2">Purchase
-        </a>
-        <a href="{% url 'cart.clear' %}">
-          <button class="btn btn-danger mb-2">
-            Remove all movies from Cart
-          </button>
+        <a href="{% url 'cart.purchase' template_data.cart_id %}" class="btn bg-dark text-white mb-2">Purchase</a>
+        <a href="{% url 'cart.clear' template_data.cart_id %}">
+          <button class="btn btn-danger mb-2">Remove all movies from Cart {{ template_data.cart_id }}</button>
         </a>
         {% endif %}
       </div>
     </div>
+
   </div>
 </div>
 {% endblock content %}
