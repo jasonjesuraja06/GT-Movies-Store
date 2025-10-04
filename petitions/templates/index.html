@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="p-3">
+  <div class="container">
+    <div class="row mt-3">
+      <div class="col mx-auto mb-3">
+        <h2>Petitions</h2>
+        <hr />
+      </div>
+    </div>
+
+    {% if user.is_authenticated %}
+    <div class="row mb-4">
+      <div class="col-md-8">
+        <div class="card shadow p-3 rounded">
+          <div class="card-body">
+            <h5>Create a new petition</h5>
+            <form method="POST" action="{% url 'petitions.create' %}">
+              {% csrf_token %}
+              <div class="mb-2">
+                <label class="form-label">Movie title you want included</label>
+                <input class="form-control" type="text" name="title" required />
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Why (optional)</label>
+                <textarea class="form-control" name="description"></textarea>
+              </div>
+              <button class="btn bg-dark text-white" type="submit">Create Petition</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="row">
+      <div class="col-md-10">
+        <ul class="list-group">
+          {% for p in template_data.petitions %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+              <b>{{ p.title }}</b><br/>
+              <small>by {{ p.created_by.username }} • {{ p.created }}</small><br/>
+              {% if p.description %}<small>{{ p.description }}</small>{% endif %}
+            </div>
+            <div class="d-flex align-items-center gap-3">
+              <span class="badge bg-primary">Yes: {{ p.votes.count }}</span>
+              {% if user.is_authenticated %}
+              <form method="POST" action="{% url 'petitions.vote_yes' p.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success">Vote Yes</button>
+              </form>
+              {% endif %}
+            </div>
+          </li>
+          {% empty %}
+          <li class="list-group-item">No petitions yet. Be the first to create one!</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
