@@ -26,8 +26,11 @@ SECRET_KEY = 'django-insecure-_kur06-$n*zu0+hw7u#)doz_3@w5k4*#zqo-aqlmb1q&0kdmkh
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = [
+    "jjesuraja3.pythonanywhere.com",   # your PA domain
+    # optionally, allow subdomains during testing:
+    ".pythonanywhere.com",
+]
 
 # Application definition
 
